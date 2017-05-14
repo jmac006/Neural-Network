@@ -53,12 +53,12 @@ function [W1,W2] = trainneuralnet(X,Y,nhid,lambda)
 		if mod(iteration,1000) == 0
 			iteration
 			gridX = getgridpts(origX,20); 
-			gridX = [ones(size(gridX,1),1) gridX]; %add a column of 1's to gridX
+			newGridX = [ones(size(gridX,1),1) gridX]; %add a column of 1's to gridX
 			gridY = zeros(size(gridX, 1), 1);
-			[hiddenActivation,hiddenZ,out] = forwardPropagation(gridX,W1,W2);
+			[hiddenActivation,hiddenZ,out] = forwardPropagation(newGridX,W1,W2);
 			gridY = out;
-			%gridY(gridY > 0.5) = 1;
-        	%gridY(gridY <= 0.5) = 0;
+			gridY(gridY > 0.5) = 1;
+        	gridY(gridY <= 0.5) = 0;
 			plotdecision(X(:, 2:end), Y, gridX, gridY)
 			drawnow
 			%hold off;

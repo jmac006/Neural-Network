@@ -11,9 +11,9 @@ Y = toy(:,end);
 
 fnum = 1;
 
-%for lambda = [0.001 0.0001 0.00001]
-for lambda = [0.00025] %used for testing to match with outputs on problem set handout
-    for nhidden = [1] %number of hidden units   
+for lambda = [0.001 0.0001 0.00001]
+%for lambda = [0.00025] %used for testing to match with outputs on problem set handout
+    for nhidden = [1 5 15] %number of hidden units   
 		subplot(3,3,fnum);
 		[W1,W2] = trainneuralnet(X,Y,nhidden,lambda)
 		gridX = getgridpts(X,20); 
