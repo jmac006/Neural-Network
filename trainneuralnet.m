@@ -7,6 +7,7 @@ function [W1,W2] = trainneuralnet(X,Y,nhid,lambda)
 	% Function returns weights for the first layer and the weights for the second layer
 	% nhid = the number of hidden 
 
+	origX = X
 	%add a column of 1's to the array X
 	X = [ones(size(X,1),1) X]
 
@@ -31,9 +32,9 @@ function [W1,W2] = trainneuralnet(X,Y,nhid,lambda)
 		gradient1 = 0;
 		gradient2 = 0;
 		for i = 1:m
-			[activate,hiddenOutput,out] = forwardPropagation(X,W1,W2,i); %Forward propagation
+			[activate,hiddenOutput,out] = forwardPropagation(X(i,:),W1,W2); %Forward propagation, need to pass in index i
 			[delta1,delta2] = backwardPropagation(Y,W2,activate,out,i); %Backward propagation
-			%calculate the sum
+			%find the sum of all weights
 			sumW2 = delta2.*hiddenOutput';
 			%replicate matrix into a 1 x # hidden units to duplicate as bipartite graph
 			%multiply by replicated matrix of 3 x 1 block
@@ -48,19 +49,20 @@ function [W1,W2] = trainneuralnet(X,Y,nhid,lambda)
 		
 		W1 = W1-learningRate.*gradient1; %update the new weights
 		W2 = W2-learningRate.*gradient2;
-		iteration = iteration + 1;
-
+		
 		if mod(iteration,1000) == 0
 			iteration
-			gridX = getgridpts(X,20);
-			newGridX = [ones(size(gridX,1),1) gridX]; %add a column of 1's to gridX
-			Ha = newGridX * W1;
-			Hz = 1./(1+exp(-Ha));
-			Hz = [ones(size(Hz,1),1) Hz];
-			Ya = Hz*W2;
-			Yz = 1./(1+exp(-Ya));
-			gridY = Yz;
-			plotdecision(X,Y,gridX,gridY);
+			gridX = getgridpts(origX,20); 
+			gridX = [ones(size(gridX,1),1) gridX]; %add a column of 1's to gridX
+			gridY = zeros(size(gridX, 1), 1);
+			[hiddenActivation,hiddenZ,out] = forwardPropagation(gridX,W1,W2);
+			gridY = out;
+			%gridY(gridY > 0.5) = 1;
+        	%gridY(gridY <= 0.5) = 0;
+			plotdecision(X(:, 2:end), Y, gridX, gridY)
 			drawnow
+			%hold off;
 		end
+
+		iteration = iteration + 1;
 	end

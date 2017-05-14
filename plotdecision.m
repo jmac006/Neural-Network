@@ -1,7 +1,7 @@
 function plotdecision(trainX,trainY,gridX,gridY,threshold)
 
 if (nargin<5)
-	threshold = 0.5
+	threshold = 0.5;
 end;
 
 nel = sqrt(size(gridX,1));
