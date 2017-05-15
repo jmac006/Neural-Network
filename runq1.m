@@ -11,15 +11,15 @@ Y = toy(:,end);
 
 fnum = 1;
 
-for lambda = [0.001 0.0001 0.00001]
 %for lambda = [0.00025] %used for testing to match with outputs on problem set handout
-    for nhidden = [1 5 15] %number of hidden units   
+for lambda = [0.001 0.0001 0.00001]
+	for nhidden = [1 5 15] %number of hidden units   
 		subplot(3,3,fnum);
 		[W1,W2] = trainneuralnet(X,Y,nhidden,lambda)
-		gridX = getgridpts(X,20); 
+		gridX = getgridpts(X,20); %resolution of plot (ndiv) = 20
 		newGridX = [ones(size(gridX,1),1) gridX]; %add a column of 1's to gridX
 		[hiddenActivation,hiddenZ,out] = forwardPropagation(newGridX,W1,W2);
-		gridY = out;
+		gridY = out; %gridY depends on forward propagation to plot the predicted output
 		plotdecision(X,Y,gridX,gridY);
 		title(['nhidden = ' num2str(nhidden) ', lambda = ', num2str(lambda)]);
 		hold off;
